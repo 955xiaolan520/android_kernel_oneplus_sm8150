@@ -228,7 +228,7 @@ int oplus_display_panel_set_hbm(void *buf)
 	unsigned int *temp_save = buf;
 	int ret = 0;
 
-	sscanf(buf, "%du", &temp_save);
+	sscanf(buf, "%u", temp_save);
 	printk(KERN_INFO "%s oplus_display_set_hbm = %d\n", __func__, (*temp_save));
 	if (get_oplus_display_power_status() != OPLUS_DISPLAY_POWER_ON) {
 		printk(KERN_ERR	 "%s oplus_display_set_hbm = %d, but now display panel status is not on\n", __func__, (*temp_save));
