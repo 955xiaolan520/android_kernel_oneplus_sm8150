@@ -152,8 +152,7 @@ static int extend_codec_prop_parse(struct device *dev, const char *codec_prop[],
 
 	ret = of_property_count_strings(dev->of_node, codec_prop[CODEC_NAME]);
 	if (ret <= 0) {
-		pr_warn("%s: Invalid number of codecs, node=%s, ret=%d
-",
+		pr_warn("%s: Invalid number of codecs, node=%s, ret=%d\\n",
 			__func__, dev->of_node->full_name, ret);
 		return -EINVAL;
 	} else {
@@ -204,8 +203,7 @@ static void extend_codec_be_dailink(struct codec_prop_info *codec_info, struct s
 	}
 
 	i2s_id = codec_info->i2s_id;
-	pr_info("%s: i2s_id=%d, size=%zu!
-", __func__, i2s_id, size);
+	pr_info("%s: i2s_id=%d, size=%zu!\\n", __func__, i2s_id, size);
 	if ((i2s_id * 2 + 1) >= size) {
 		pr_err("%s: i2s_id param invalid!\n", __func__);
 		return;
