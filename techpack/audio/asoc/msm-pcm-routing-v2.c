@@ -1078,7 +1078,7 @@ static struct cal_block_data *msm_routing_find_topology_by_path(int path,
 			continue;
 
 		if (((struct audio_cal_info_adm_top *)cal_block
-			->cal_info)->path == path && 
+			->cal_info)->path == path &&
 			((struct audio_cal_info_adm_top *)cal_block->cal_info)
 			->acdb_id != 102) {
 			return cal_block;
@@ -14494,7 +14494,7 @@ static const struct snd_kcontrol_new mmul17_mixer_controls[] = {
 	MSM_BACKEND_DAI_AFE_LOOPBACK_TX,
 	MSM_FRONTEND_DAI_MULTIMEDIA17, 1, 0, msm_routing_get_audio_mixer,
 	msm_routing_put_audio_mixer),
-#endif /* OPLUS_ARCH_EXTENDS */	
+#endif /* OPLUS_ARCH_EXTENDS */
 };
 
 static const struct snd_kcontrol_new mmul18_mixer_controls[] = {
@@ -18955,10 +18955,10 @@ static const int mi2s_rx_vi_fb_tx_value[] = {
 	MSM_BACKEND_DAI_MAX, MSM_BACKEND_DAI_SENARY_MI2S_TX
 };
 #else
-static const int const mi2s_rx_vi_fb_tx_value[] = {
+static const int mi2s_rx_vi_fb_tx_value[] = {
 	MSM_BACKEND_DAI_MAX, MSM_BACKEND_DAI_QUATERNARY_MI2S_TX
 };
-static const int const mi2s_quat_rx_vi_fb_tx_value[] = {
+static const int mi2s_quat_rx_vi_fb_tx_value[] = {
 	MSM_BACKEND_DAI_MAX, MSM_BACKEND_DAI_QUATERNARY_MI2S_TX
 };
 #endif
