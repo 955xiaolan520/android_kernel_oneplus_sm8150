@@ -2449,14 +2449,15 @@ static struct cal_block_data *afe_find_cal(int cal_index, int port_id)
 		     this_afe.dev_acdb_id[afe_port_index]) &&
 		    (afe_cal_info->sample_rate ==
 		     this_afe.afe_sample_rates[afe_port_index])) {
-			pr_debug("%s: cal block is a match, size is %zd\n",
+			pr_debug("%s: cal block is a match, size is %zu\n",
 				 __func__, cal_block->cal_data.size);
 			goto exit;
 #ifdef OPLUS_ARCH_EXTENDS
 		} else if ((afe_port_index == IDX_AFE_PORT_ID_QUATERNARY_MI2S_RX)
 			&& (afe_cal_info->acdb_id == this_afe.dev_acdb_id[afe_port_index])) {
-			pr_debug("%s: Because afe_port_index is %d, so cal block is a match, size is %zd\n",
-				__func__, cal_block->cal_data.size);
+			pr_debug("%s: Because afe_port_index is %d, so cal block is a match, size is %zu\n",
+				__func__, afe_port_index,
+				cal_block->cal_data.size);
 			goto exit;
 #endif
 		}
