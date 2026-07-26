@@ -3694,8 +3694,9 @@ enum tfa_error tfa_dev_set_state(struct tfa_device *tfa, enum tfa_state state)
 		break;
 	case TFA_STATE_INIT_CF:      /* coolflux HW access possible (~initcf) */
 								 /* Start with SBSL=0 to stay in initCF state */
-	if(!tfa->is_probus_device)
-		TFA_SET_BF(tfa, SBSL, 0);
+		if (!tfa->is_probus_device) {
+			TFA_SET_BF(tfa, SBSL, 0);
+		}
 
 		/* We want to leave Wait4SrcSettings state for max2 */
 		if (tfa->tfa_family == 2)
@@ -3729,10 +3730,11 @@ enum tfa_error tfa_dev_set_state(struct tfa_device *tfa, enum tfa_state state)
 								 /* Depending on our previous state we need to set 3 bits */
 		TFA_SET_BF(tfa, PWDN, 0);	/* Coming from state 0 */
 		TFA_SET_BF(tfa, MANSCONF, 1);	/* Coming from state 1 */
-	if (!tfa->is_probus_device)
-		TFA_SET_BF(tfa, SBSL, 1);	/* Coming from state 6 */
-	else
-		TFA_SET_BF(tfa, AMPE, 1);	/* No SBSL for probus device, we set AMPE to 1  */
+		if (!tfa->is_probus_device) {
+			TFA_SET_BF(tfa, SBSL, 1);	/* Coming from state 6 */
+		} else {
+			TFA_SET_BF(tfa, AMPE, 1);	/* No SBSL for probus device, we set AMPE to 1  */
+		}
 
 									/*
 									* Disable MTP clock to protect memory.
@@ -3886,8 +3888,9 @@ enum tfa_error tfa_dev_mtp_set(struct tfa_device *tfa, enum tfa_mtp item, int va
 					TFA_SET_BF(tfa, R25CL, (uint16_t)value);
 				else
 				{
-				    if (tfa->is_probus_device)
-				        tfa2_manual_mtp_cpy(tfa, 0xf4, value, 2);
+					if (tfa->is_probus_device) {
+						tfa2_manual_mtp_cpy(tfa, 0xf4, value, 2);
+					}
 					TFA_SET_BF(tfa, R25C, (uint16_t)value);
 				}
 			}
