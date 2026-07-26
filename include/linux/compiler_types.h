@@ -317,8 +317,13 @@ struct ftrace_likely_data {
 #define __diag_error(compiler, version, option, comment) \
 	__diag_ ## compiler(version, error, option)
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
 /*
  * Add the pseudo keyword 'fallthrough' so case statement blocks
+
  * must end with any of these keywords:
  *   break;
  *   fallthrough;

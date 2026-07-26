@@ -2656,7 +2656,7 @@ static ssize_t infrared_shut_down_state_store(struct device* pdev, struct device
 		g_the_chip->infrared_shut_down_state = infrared_shut_down_state;
 		MOTOR_LOG("would set infrared_shut_down_state, free_fall_irq_times : %d", g_the_chip->infrared_shut_down_state);
 	} 
-	MOTOR_LOG("infrared_shut_down_state : %d", infrared_shut_down_state);
+	MOTOR_LOG("infrared_shut_down_state : %lu", infrared_shut_down_state);
 
 	return count;
 }
@@ -2693,7 +2693,7 @@ static ssize_t hall_sensitive_store(struct device* pdev, struct device_attribute
 		oneplus_dhall_set_sensitive(HALL_UP, g_the_chip->hall_sensitive);
 	}
 
-	MOTOR_LOG("hall_sensitive : %d", hall_sensitive);
+	MOTOR_LOG("hall_sensitive : %lu", hall_sensitive);
 
 	return count;
 }

@@ -1,0 +1,59 @@
+name: Build SM8150 probiotics Android 16 kernel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cloud-build-probiotics
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential cpio flex libelf-dev libssl-dev \
+            device-tree-compiler dwarves gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
+            python3 rsync
+
+      - name: Configure
+        run: |
+          make O=out-probiotics ARCH=arm64 vendor/sm8150-perf_defconfig
+          scripts/config --file out-probiotics/.config --set-str CONFIG_LOCALVERSION '-probiotics-android16'
+          make O=out-probiotics ARCH=arm64 olddefconfig
+
+      - name: Build kernel and modules
+        run: |
+          make O=out-probiotics ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+            -j"$(nproc)" Image dtbs modules
+
+      - name: Verify outputs
+        run: |
+          test -s out-probiotics/arch/arm64/boot/Image
+          test -s out-probiotics/System.map
+          test -s out-probiotics/vmlinux
+          grep -E '^(CONFIG_LOCALVERSION|CONFIG_DEBUG_INFO_BTF)=' out-probiotics/.config || true
+          find out-probiotics/arch/arm64/boot -type f \( -name '*.dtb' -o -name '*.dtbo' \) -print
+
+      - name: Package artifacts
+        run: |
+          tar -czf kernel-artifacts.tar.gz \
+            -C out-probiotics \
+            arch/arm64/boot/Image \
+            System.map vmlinux .config
+          find out-probiotics -type f -name '*.ko' -print0 | tar --null -czf modules.tar.gz --files-from=- || true
+          find out-probiotics/arch/arm64/boot -type f \( -name '*.dtb' -o -name '*.dtbo' \) -print0 | tar --null -czf dtb-artifacts.tar.gz --files-from=- || true
+
+      - name: Upload kernel artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm8150-probiotics-android16-kernel
+          path: |
+            kernel-artifacts.tar.gz
+            modules.tar.gz
+            dtb-artifacts.tar.gz
+          if-no-files-found: error
