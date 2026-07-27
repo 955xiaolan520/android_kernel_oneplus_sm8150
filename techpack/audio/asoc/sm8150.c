@@ -3571,7 +3571,7 @@ static int msm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 	struct snd_interval *channels = hw_param_interval(params,
 					SNDRV_PCM_HW_PARAM_CHANNELS);
 	int rc = 0;
-	int idx;
+	int idx = 0;
 	void *config = NULL;
 	struct snd_soc_codec *codec = NULL;
 
@@ -5164,8 +5164,7 @@ static int msm_mi2s_snd_startup(struct snd_pcm_substream *substream)
 		ret = msm_mi2s_set_sclk(substream, true);
 		if (ret < 0) {
 			dev_err(rtd->card->dev,
-				"%s: afe lpass clock failed ",
-				"to enable MI2S clock, err:%d\n",
+				"%s: afe lpass clock failed to enable MI2S clock, err:%d\n",
 				__func__, ret);
 			goto clean_up;
 		}

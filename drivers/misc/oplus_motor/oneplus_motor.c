@@ -1167,7 +1167,7 @@ static void motor_run_work(struct work_struct* work)
 	MOTOR_LOG("%s, motor_enable : %d, motor_started : %d",
 						 __func__, chip->motor_enable, chip->motor_started);
 
-	MOTOR_LOG("is_factory_mode : %lu \n", chip->is_factory_mode);
+	MOTOR_LOG("is_factory_mode : %d \n", chip->is_factory_mode);
 
 	if (chip->motor_enable && (chip->motor_started == 0)) {
 		mutex_lock(&motor_start_mutex);
@@ -1408,7 +1408,7 @@ static void  free_fall_irq_check_work_func(struct work_struct* work)
 		return;
 	}
 
-	MOTOR_LOG("free_fall_irq_times : %d, infrared_shut_down_state : %d \n", chip->free_fall_irq_times, chip->infrared_shut_down_state);
+	MOTOR_LOG("free_fall_irq_times : %lu, infrared_shut_down_state : %d \n", chip->free_fall_irq_times, chip->infrared_shut_down_state);
 
 	if (chip->free_fall_irq_times == 1) {
 		g_the_chip->is_free_fall = true;
@@ -1417,11 +1417,11 @@ static void  free_fall_irq_check_work_func(struct work_struct* work)
 		enable_irq(g_the_chip->free_fall_irq);
 
 	} else if (chip->free_fall_irq_times >= 2) {
-		MOTOR_LOG("infrared notify event, free_fall_irq_times : %d \n", chip->free_fall_irq_times);
+		MOTOR_LOG("infrared notify event, free_fall_irq_times : %lu \n", chip->free_fall_irq_times);
 		chip->infrared_shut_down_state = 1;
 
 	} else {
-		MOTOR_LOG("unknow event, free_fall_irq_times : %d \n", chip->free_fall_irq_times);
+		MOTOR_LOG("unknow event, free_fall_irq_times : %lu \n", chip->free_fall_irq_times);
 	}
 
 	chip->free_fall_irq_times = 0;
@@ -1480,7 +1480,7 @@ static void  camera_position_detect_work(struct work_struct* work)
 	MOTOR_LOG("camera_down_slow_down_position_hall_down_data : %d, camera_down_slow_down_position_hall_up_data : %d\n",
 		       chip->camera_down_slow_down_position_hall_down_data, chip->camera_down_slow_down_position_hall_up_data);
 	MOTOR_LOG("deltad_range_low : %d, deltad_range_high : %d \n", deltad_range_low, deltad_range_high);
-	MOTOR_LOG("stall_steps : %d, begin_stop_detect_percent : %lu \n", chip->stall_steps, chip->begin_stop_detect_percent);
+	MOTOR_LOG("stall_steps : %d, begin_stop_detect_percent : %d \n", chip->stall_steps, chip->begin_stop_detect_percent);
 
 	oneplus_change_motor_speed(MOTOR_SPEED0);
 
@@ -1539,7 +1539,7 @@ static void  camera_position_detect_work(struct work_struct* work)
 	    do_gettimeofday(&current_time);
 		distance_time = (current_time.tv_sec - chip->motor_start_time.tv_sec) * 1000000 +
 		                (current_time.tv_usec - chip->motor_start_time.tv_usec);
-		MOTOR_LOG("distance_time : %d, current_time.tv_sec : %lu, current_time.tv_usec : %lu",
+		MOTOR_LOG("distance_time : %lu, current_time.tv_sec : %lu, current_time.tv_usec : %lu",
 		           distance_time, (unsigned long)current_time.tv_sec, (unsigned long)current_time.tv_usec);
 
     	//stop motor algo
@@ -1923,7 +1923,7 @@ static ssize_t motor_direction_store(struct device* pdev, struct device_attribut
 	}
 
 	err = sscanf(buf, "%lu", &direction);
-	MOTOR_LOG("direction : %d, motor_started : %d", direction,g_the_chip->motor_started);
+	MOTOR_LOG("direction : %lu, motor_started : %d", direction,g_the_chip->motor_started);
 	if (g_the_chip->motor_started) {
 		MOTOR_ERR("g_the_chip->motor_started != 0\n");
 		return count;
@@ -2136,7 +2136,7 @@ static ssize_t hall_calibration_store(struct device* pdev, struct device_attribu
 		else
 			g_the_chip->deltad_range = 10;
 
-		MOTOR_LOG("deltad_range : %lu \n", g_the_chip->deltad_range);
+		MOTOR_LOG("deltad_range : %d \n", g_the_chip->deltad_range);
 
 		oneplus_dhall_set_sensitive(HALL_DOWN, g_the_chip->hall_sensitive);
 		oneplus_dhall_set_sensitive(HALL_UP, g_the_chip->hall_sensitive);
@@ -2455,9 +2455,9 @@ static ssize_t motor_speed_store(struct device* pdev, struct device_attribute* a
 		if (speed >=0 && speed <=14) {
 			g_the_chip->is_speed_set = true;
 			g_the_chip->test_speed = speed;
-			MOTOR_LOG("would set speed, test_speed : %lu", g_the_chip->test_speed);
+			MOTOR_LOG("would set speed, test_speed : %d", g_the_chip->test_speed);
 		} else {
-			MOTOR_LOG("speed (%lu) parameter is invalid, would not set speed", speed);
+			MOTOR_LOG("speed (%d) parameter is invalid, would not set speed", speed);
 		}
 	}
 
@@ -2491,9 +2491,9 @@ static ssize_t motor_slow_down_speed_store(struct device* pdev, struct device_at
 	if (sscanf(buff, "%lu", &slow_down_speed) == 1) {
 		if (slow_down_speed >=0 && slow_down_speed <=14) {
 			g_the_chip->slow_down_speed = slow_down_speed;
-			MOTOR_LOG("would set slow_down_speed, slow_down_speed : %lu", g_the_chip->slow_down_speed);
+			MOTOR_LOG("would set slow_down_speed, slow_down_speed : %d", g_the_chip->slow_down_speed);
 		} else {
-			MOTOR_LOG("slow_down_speed (%lu) parameter is invalid, would not set slow_down_speed", slow_down_speed);
+			MOTOR_LOG("slow_down_speed (%d) parameter is invalid, would not set slow_down_speed", slow_down_speed);
 		}
 	}
 
@@ -2526,7 +2526,7 @@ static ssize_t deltad_range_store(struct device* pdev, struct device_attribute* 
 
 	if (sscanf(buff, "%lu", &deltad_range) == 1) {
 		g_the_chip->deltad_range = deltad_range;
-		MOTOR_LOG("would set deltad_range, deltad_range : %lu", g_the_chip->deltad_range);
+		MOTOR_LOG("would set deltad_range, deltad_range : %d", g_the_chip->deltad_range);
 	}
 
 	return count;
@@ -2557,10 +2557,10 @@ static ssize_t begin_stop_detect_percent_store(struct device* pdev, struct devic
 
 	if (sscanf(buff, "%lu", &begin_stop_detect_percent) == 1) {
 		g_the_chip->begin_stop_detect_percent = begin_stop_detect_percent;
-		MOTOR_LOG("would set begin_stop_detect_percent, begin_stop_detect_percent : %lu",
+		MOTOR_LOG("would set begin_stop_detect_percent, begin_stop_detect_percent : %d",
 				 g_the_chip->begin_stop_detect_percent);
 	}
-	MOTOR_LOG("begin_stop_detect_percent : %lu", begin_stop_detect_percent);
+	MOTOR_LOG("begin_stop_detect_percent : %d", begin_stop_detect_percent);
 
 	return count;
 }
@@ -2590,9 +2590,9 @@ static ssize_t factory_mode_store(struct device* pdev, struct device_attribute* 
 
 	if (sscanf(buff, "%lu", &is_factory_mode) == 1) {
 		g_the_chip->is_factory_mode = is_factory_mode;
-		MOTOR_LOG("would set is_factory_mode, is_factory_mode : %lu", g_the_chip->is_factory_mode);
+		MOTOR_LOG("would set is_factory_mode, is_factory_mode : %d", g_the_chip->is_factory_mode);
 	}
-	MOTOR_LOG("is_factory_mode : %lu", is_factory_mode);
+	MOTOR_LOG("is_factory_mode : %d", is_factory_mode);
 
 	return count;
 }
@@ -2622,9 +2622,9 @@ static ssize_t free_fall_irq_times_store(struct device* pdev, struct device_attr
 
 	if (sscanf(buff, "%lu", &free_fall_irq_times) == 1) {
 		g_the_chip->free_fall_irq_times = free_fall_irq_times;
-		MOTOR_LOG("would set free_fall_irq_times, free_fall_irq_times : %d", g_the_chip->free_fall_irq_times);
+		MOTOR_LOG("would set free_fall_irq_times, free_fall_irq_times : %lu", g_the_chip->free_fall_irq_times);
 	}
-	MOTOR_LOG("free_fall_irq_times : %d", free_fall_irq_times);
+	MOTOR_LOG("free_fall_irq_times : %lu", free_fall_irq_times);
 
 	return count;
 }
@@ -2654,7 +2654,7 @@ static ssize_t infrared_shut_down_state_store(struct device* pdev, struct device
 
 	if (sscanf(buff, "%lu", &infrared_shut_down_state) == 1) {
 		g_the_chip->infrared_shut_down_state = infrared_shut_down_state;
-		MOTOR_LOG("would set infrared_shut_down_state, free_fall_irq_times : %d", g_the_chip->infrared_shut_down_state);
+		MOTOR_LOG("would set infrared_shut_down_state, free_fall_irq_times : %lu", g_the_chip->infrared_shut_down_state);
 	}
 	MOTOR_LOG("infrared_shut_down_state : %lu", infrared_shut_down_state);
 
